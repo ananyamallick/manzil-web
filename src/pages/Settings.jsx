@@ -154,21 +154,27 @@ function Settings() {
         {/* Profile Card */}
         <div className="card">
           <h2>👤 Profile</h2>
-          <p><strong>Email:</strong> {email}</p>
-          <p><strong>Role:</strong> {role}</p>
+          <div className="profile-info">
+            <p><strong>Email:</strong> {email}</p>
+            <p><strong>Role:</strong> {role}</p>
+          </div>
 
           {isEditing ? (
-            <>
+            <div className="edit-profile-form">
               <input
                 type="email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="Enter new email"
+                className="profile-input"
               />
-              <button onClick={handleSaveProfile}>Save</button>
-            </>
+              <div className="edit-buttons">
+                <button className="btn-save-profile" onClick={handleSaveProfile}>💾 Save Changes</button>
+                <button className="btn-cancel" onClick={() => setIsEditing(false)}>❌ Cancel</button>
+              </div>
+            </div>
           ) : (
-            <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+            <button className="btn-edit-profile" onClick={() => setIsEditing(true)}>✏️ Edit Profile</button>
           )}
         </div>
 
@@ -176,29 +182,20 @@ function Settings() {
         <div className="card">
           <h2>🎙️ Record Alert Voice</h2>
           {!recording ? (
-            <button onClick={startRecording}>Start Recording</button>
+            <button className="btn-record" onClick={startRecording}>🎙️ Start Recording</button>
           ) : (
-            <button onClick={stopRecording}>Stop Recording</button>
+            <button className="btn-stop" onClick={stopRecording}>⏹️ Stop Recording</button>
           )}
 
           {audioURL && (
-            <div style={{ marginTop: "10px" }}>
+            <div style={{ marginTop: "15px" }}>
               <audio controls src={audioURL}></audio>
               <br />
-              <button onClick={saveRecording} style={{ marginTop: "10px" }}>
-                Save Recording
+              <button onClick={saveRecording} style={{ marginTop: "15px" }} className="btn-save">
+                💾 Save Recording
               </button>
             </div>
           )}
-        </div>
-
-        {/* Security Card */}
-        <div className="card">
-          <h2>🔒 Security</h2>
-          <p>Change or reset your password if forgotten.</p>
-          <button className="btn-danger" onClick={handleResetPassword}>
-            Reset Password
-          </button>
         </div>
       </main>
     </div>

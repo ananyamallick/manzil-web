@@ -27,42 +27,71 @@ function AddPatientForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }} className="add-patient-form">
+    <form onSubmit={handleSubmit} className="add-patient-form animate-fadeInUp">
       <div className="form-group">
         <label htmlFor="patientName">Patient Name</label>
-        <input id="patientName" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Patient Name" required />
+        <input 
+          id="patientName" 
+          type="text" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)} 
+          placeholder="Enter patient's full name" 
+          required 
+        />
       </div>
+      
       <div className="form-group">
-        <label htmlFor="condition">Condition</label>
-        <input id="condition" type="text" value={condition} onChange={(e) => setCondition(e.target.value)} placeholder="Condition" required />
+        <label htmlFor="condition">Medical Condition</label>
+        <input 
+          id="condition" 
+          type="text" 
+          value={condition} 
+          onChange={(e) => setCondition(e.target.value)} 
+          placeholder="Describe the patient's condition" 
+          required 
+        />
       </div>
+      
       <div className="form-group">
-        <label htmlFor="caregiver">Caregiver</label>
-        <select id="caregiver" value={caregiver} onChange={(e) => setCaregiver(e.target.value)} required style={{ marginRight: "10px" }} >
+        <label htmlFor="caregiver">Assigned Caregiver</label>
+        <select 
+          id="caregiver" 
+          value={caregiver} 
+          onChange={(e) => setCaregiver(e.target.value)} 
+          required
+        >
           <option value="">Select Caregiver</option>
           <option value="Dr. Smith">Dr. Smith</option>
           <option value="Nurse Asha">Nurse Asha</option>
           <option value="Family Member">Family Member</option>
         </select>
       </div>
-      <div className="form-group" style={{ display: "flex", alignItems: "center" }}>
-        <label htmlFor="range" style={{ marginRight: "10px", marginBottom: "0" }}>Range</label>
-        <input
-          id="range"
-          type="number"
-          value={range}
-          onChange={(e) => setRange(e.target.value)}
-          placeholder="Range"
-          required
-          min="0.1"
-          step="0.1"
-          style={{ marginRight: "5px", width: "unset" }}
-        />
-        <select value={rangeUnit} onChange={(e) => setRangeUnit(e.target.value)} style={{ marginRight: "10px", width: "unset" }}>
-          <option value="m">m</option>
-          <option value="km">km</option>
-        </select>
+      
+      <div className="form-group">
+        <label htmlFor="range">Safety Range</label>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <input
+            id="range"
+            type="number"
+            value={range}
+            onChange={(e) => setRange(e.target.value)}
+            placeholder="0.5"
+            required
+            min="0.1"
+            step="0.1"
+            style={{ flex: "1" }}
+          />
+          <select 
+            value={rangeUnit} 
+            onChange={(e) => setRangeUnit(e.target.value)}
+            style={{ width: "100px" }}
+          >
+            <option value="m">Meters</option>
+            <option value="km">Kilometers</option>
+          </select>
+        </div>
       </div>
+      
       <button type="submit">Add Patient</button>
     </form>
   );

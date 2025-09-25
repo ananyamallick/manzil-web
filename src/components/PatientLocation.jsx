@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 
 // Haversine distance in meters
 function distanceMeters(lat1, lon1, lat2, lon2) {
@@ -18,7 +17,6 @@ export default function PatientLocation() {
   const [home] = useState({ lat: 12.899, lng: 80.189 }); // safe zone center (set to hospital/home)
   const [radius] = useState(500); // meters
   const [location, setLocation] = useState(null);
-  const [alertMsg, setAlertMsg] = useState("");
 
   const updateLocation = () => {
     if (!navigator.geolocation) {
@@ -31,13 +29,9 @@ export default function PatientLocation() {
         const newLoc = { lat: latitude, lng: longitude };
         setLocation(newLoc);
 
-        // Check distance
+        // Check distance (logic kept for future use but no alert displayed)
         const dist = distanceMeters(latitude, longitude, home.lat, home.lng);
-        if (dist > radius) {
-          setAlertMsg("⚠️ Patient has left the safe zone!");
-        } else {
-          setAlertMsg("");
-        }
+        // Alert logic removed as requested
       },
       (err) => alert("Error getting location: " + err.message),
       { enableHighAccuracy: true }
@@ -51,49 +45,90 @@ export default function PatientLocation() {
   }, []);
 
   return (
-    <div>
-      <h2>📍 Patient Location</h2>
-      {alertMsg && (
-        <div style={{
-          background: "#ffe5e5",
-          color: "#b00020",
-          padding: "10px 12px",
-          borderRadius: 8,
-          marginBottom: 10,
-          fontWeight: 600
+    <div className="location-container">
+      <h2 className="location-title">📍 Location</h2>
+      
+      {/* Live Location Link */}
+      {location && (
+        <div style={{ 
+          marginBottom: "16px", 
+          textAlign: "center",
+          background: "#f8f9fa",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #e9ecef"
         }}>
-          {alertMsg}
+          <p style={{ margin: "0 0 8px 0", fontSize: "14px", color: "#495057" }}>
+            📍 Current Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+          </p>
+          <a 
+            href={`https://www.google.com/maps?q=${location.lat},${location.lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-block",
+              background: "linear-gradient(135deg, #4361ee, #3a0ca3)",
+              color: "white",
+              padding: "8px 16px",
+              borderRadius: "6px",
+              textDecoration: "none",
+              fontSize: "14px",
+              fontWeight: "600",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 12px rgba(67, 97, 238, 0.3)"
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = "translateY(-1px)";
+              e.target.style.boxShadow = "0 6px 20px rgba(67, 97, 238, 0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "translateY(0)";
+              e.target.style.boxShadow = "0 4px 12px rgba(67, 97, 238, 0.3)";
+            }}
+          >
+            🗺️ View on Google Maps
+          </a>
         </div>
       )}
 
-      <div style={{ height: 400, width: "100%", borderRadius: 12, overflow: "hidden" }}>
-        <MapContainer center={home} zoom={15} style={{ height: "100%", width: "100%" }}>
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-          {/* Safe zone circle */}
-          <Circle
-            center={home}
-            radius={radius}
-            pathOptions={{ color: "#2a9d8f", fillColor: "#2a9d8f", fillOpacity: 0.1 }}
+      <div className="map-container">
+        {location ? (
+          <img
+            src={`https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=15&size=600x400&maptype=roadmap&markers=color:red%7Clabel:P%7C${location.lat},${location.lng}&markers=color:green%7Clabel:H%7C${home.lat},${home.lng}&key=YOUR_API_KEY`}
+            alt="Location Map"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "12px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+            }}
+            onError={(e) => {
+              e.target.src = `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=15&size=600x400&maptype=roadmap&markers=color:red%7Clabel:P%7C${location.lat},${location.lng}&markers=color:green%7Clabel:H%7C${home.lat},${home.lng}`;
+            }}
           />
-
-          {/* Home marker */}
-          <Marker position={home}>
-            <Popup>Home (safe zone)</Popup>
-          </Marker>
-
-          {/* Patient marker */}
-          {location && (
-            <Marker position={[location.lat, location.lng]}>
-              <Popup>Patient location</Popup>
-            </Marker>
-          )}
-        </MapContainer>
+        ) : (
+          <div style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#f8f9fa",
+            borderRadius: "12px",
+            border: "2px dashed #dee2e6",
+            color: "#6c757d",
+            fontSize: "16px",
+            fontWeight: "500"
+          }}>
+            📍 Click "Refresh Location" to load map
+          </div>
+        )}
       </div>
 
       <button
         onClick={updateLocation}
-        style={{ marginTop: 12, background: "#0077b6", color: "#fff", border: "none", padding: "8px 12px", borderRadius: 6, cursor: "pointer" }}
+        className="refresh-location-btn"
       >
         Refresh Location
       </button>

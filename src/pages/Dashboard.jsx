@@ -24,9 +24,9 @@ function Dashboard() {
 </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, padding: "30px", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div>
-          <div style={{ marginBottom: "20px" }}>
+      <main style={{ flex: 1, padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "20px" }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ marginBottom: "12px" }}>
             <h1>🏠 Dashboard</h1>
             <p>Welcome to the Patient Care Portal. Here you can manage patients and voice guidance.</p>
           </div>
@@ -68,7 +68,7 @@ function Dashboard() {
             />
           </div>
         </div>
-        <div className="patient-location-card">
+        <div className="location-panel">
           <PatientLocation />
         </div>
       </main>
