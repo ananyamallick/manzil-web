@@ -1,9 +1,53 @@
 import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { auth } from "../services/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import PatientList from "../components/PatientList";
 import PatientLocation from "../components/PatientLocation";
 import "../App.css";
 
 function Dashboard() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <aside className="sidebar">
+          <h2>Care Portal</h2>
+        </aside>
+        <main style={{ flex: 1, padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <p>Loading...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="dashboard-container">
+        <aside className="sidebar">
+          <h2>Care Portal</h2>
+        </aside>
+        <main style={{ flex: 1, padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="card" style={{ textAlign: "center" }}>
+            <h3>🔒 Access Denied</h3>
+            <p>Please log in to access the dashboard.</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard-container">
       {/* Sidebar */}

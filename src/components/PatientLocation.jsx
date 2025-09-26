@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import LocationModal from "./LocationModal";
 
 // Haversine distance in meters
 function distanceMeters(lat1, lon1, lat2, lon2) {
@@ -17,6 +18,7 @@ export default function PatientLocation() {
   const [home] = useState({ lat: 12.899, lng: 80.189 }); // safe zone center (set to hospital/home)
   const [radius] = useState(500); // meters
   const [location, setLocation] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const updateLocation = () => {
     if (!navigator.geolocation) {
@@ -48,7 +50,7 @@ export default function PatientLocation() {
     <div className="location-container">
       <h2 className="location-title">📍 Location</h2>
       
-      {/* Live Location Link */}
+      {/* Live Location Display */}
       {location && (
         <div style={{ 
           marginBottom: "16px", 
@@ -61,19 +63,18 @@ export default function PatientLocation() {
           <p style={{ margin: "0 0 8px 0", fontSize: "14px", color: "#495057" }}>
             📍 Current Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
           </p>
-          <a 
-            href={`https://www.google.com/maps?q=${location.lat},${location.lng}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button 
+            onClick={() => setIsModalOpen(true)}
             style={{
               display: "inline-block",
               background: "linear-gradient(135deg, #4361ee, #3a0ca3)",
               color: "white",
               padding: "8px 16px",
               borderRadius: "6px",
-              textDecoration: "none",
+              border: "none",
               fontSize: "14px",
               fontWeight: "600",
+              cursor: "pointer",
               transition: "all 0.3s ease",
               boxShadow: "0 4px 12px rgba(67, 97, 238, 0.3)"
             }}
@@ -86,8 +87,8 @@ export default function PatientLocation() {
               e.target.style.boxShadow = "0 4px 12px rgba(67, 97, 238, 0.3)";
             }}
           >
-            🗺️ View on Google Maps
-          </a>
+            🗺️ View Location
+          </button>
         </div>
       )}
 
@@ -121,17 +122,18 @@ export default function PatientLocation() {
             fontSize: "16px",
             fontWeight: "500"
           }}>
-            📍 Click "Refresh Location" to load map
+            📍 Location data will appear here
           </div>
         )}
       </div>
 
-      <button
-        onClick={updateLocation}
-        className="refresh-location-btn"
-      >
-        Refresh Location
-      </button>
+      {/* Location Modal */}
+      <LocationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        location={location}
+        home={home}
+      />
     </div>
   );
 }

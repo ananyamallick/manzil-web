@@ -29,7 +29,8 @@ function EditPatientForm({ patient, onSave, onCancel }) {
         condition,
         caregiver,
         range,
-        rangeUnit
+        rangeUnit,
+        userId: patient.userId // Preserve the userId to maintain privacy
       });
       onSave();
     } catch (error) {

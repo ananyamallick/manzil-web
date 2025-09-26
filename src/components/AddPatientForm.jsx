@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { db } from "../services/firebase";
+import { db, auth } from "../services/firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 function AddPatientForm() {
@@ -11,13 +11,22 @@ function AddPatientForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be logged in to add a patient.");
+      return;
+    }
+    
     await addDoc(collection(db, "patients"), {
       name,
       condition,
       caregiver,
       range,
       rangeUnit,
-      voiceUrl: ""
+      voiceUrl: "",
+      userId: user.uid, // Associate patient with current user
+      createdAt: new Date()
     });
     setName("");
     setCondition("");

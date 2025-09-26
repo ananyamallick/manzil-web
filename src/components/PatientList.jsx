@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { db } from "../services/firebase";
-import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
+import { db, auth } from "../services/firebase";
+import { collection, onSnapshot, deleteDoc, doc, query, where } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 function PatientList({ renderActionButton, showRange }) {
   const [patients, setPatients] = useState([]);
@@ -15,10 +16,21 @@ function PatientList({ renderActionButton, showRange }) {
   };
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "patients"), (snapshot) => {
-      setPatients(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Only fetch patients for the current logged-in user
+        const patientsQuery = query(collection(db, "patients"), where("userId", "==", user.uid));
+        const unsubscribePatients = onSnapshot(patientsQuery, (snapshot) => {
+          setPatients(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        });
+        return () => unsubscribePatients();
+      } else {
+        // Clear patients if no user is logged in
+        setPatients([]);
+      }
     });
-    return () => unsubscribe();
+    
+    return () => unsubscribeAuth();
   }, []);
 
   return (

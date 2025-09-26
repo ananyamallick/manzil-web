@@ -123,7 +123,35 @@ function Settings() {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <aside className="sidebar">
+          <h2>Care Portal</h2>
+        </aside>
+        <main style={{ flex: 1, padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <p>Loading...</p>
+        </main>
+      </div>
+    );
+  }
+
+  const user = auth.currentUser;
+  if (!user) {
+    return (
+      <div className="dashboard-container">
+        <aside className="sidebar">
+          <h2>Care Portal</h2>
+        </aside>
+        <main style={{ flex: 1, padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="card" style={{ textAlign: "center" }}>
+            <h3>🔒 Access Denied</h3>
+            <p>Please log in to access settings.</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-container">

@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { auth } from "../services/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import AddPatientForm from "../components/AddPatientForm";
 import PatientList from "../components/PatientList";
 import EditPatientForm from "../components/EditPatientForm";
@@ -7,6 +9,46 @@ import "../App.css";
 
 function Patients() {
   const [editingPatient, setEditingPatient] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <aside className="sidebar">
+          <h2>Care Portal</h2>
+        </aside>
+        <main style={{ flex: 1, padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <p>Loading...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="dashboard-container">
+        <aside className="sidebar">
+          <h2>Care Portal</h2>
+        </aside>
+        <main style={{ flex: 1, padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div className="card" style={{ textAlign: "center" }}>
+            <h3>🔒 Access Denied</h3>
+            <p>Please log in to access patient management.</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-container">
