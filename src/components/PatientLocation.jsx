@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import LocationModal from "./LocationModal";
 
 // Haversine distance in meters
 function distanceMeters(lat1, lon1, lat2, lon2) {
@@ -18,7 +17,13 @@ export default function PatientLocation() {
   const [home] = useState({ lat: 12.899, lng: 80.189 }); // safe zone center (set to hospital/home)
   const [radius] = useState(500); // meters
   const [location, setLocation] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openGoogleMaps = () => {
+    if (location) {
+      const url = `https://www.google.com/maps?q=${location.lat},${location.lng}`;
+      window.open(url, '_blank');
+    }
+  };
 
   const updateLocation = () => {
     if (!navigator.geolocation) {
@@ -64,7 +69,7 @@ export default function PatientLocation() {
             📍 Current Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
           </p>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={openGoogleMaps}
             style={{
               display: "inline-block",
               background: "linear-gradient(135deg, #4361ee, #3a0ca3)",
@@ -92,48 +97,46 @@ export default function PatientLocation() {
         </div>
       )}
 
-      <div className="map-container">
-        {location ? (
-          <img
-            src={`https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=15&size=600x400&maptype=roadmap&markers=color:red%7Clabel:P%7C${location.lat},${location.lng}&markers=color:green%7Clabel:H%7C${home.lat},${home.lng}&key=YOUR_API_KEY`}
-            alt="Location Map"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              borderRadius: "12px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
-            }}
-            onError={(e) => {
-              e.target.src = `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=15&size=600x400&maptype=roadmap&markers=color:red%7Clabel:P%7C${location.lat},${location.lng}&markers=color:green%7Clabel:H%7C${home.lat},${home.lng}`;
-            }}
+      {/* OpenStreetMap Display */}
+      {location && (
+        <div style={{ 
+          marginTop: "16px",
+          borderRadius: "12px",
+          overflow: "hidden",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+        }}>
+          <iframe
+            width="100%"
+            height="300"
+            frameBorder="0"
+            style={{ border: 0 }}
+            src={`https://www.openstreetmap.org/export/embed.html?bbox=${location.lng - 0.01},${location.lat - 0.01},${location.lng + 0.01},${location.lat + 0.01}&layer=mapnik&marker=${location.lat},${location.lng}`}
+            allowFullScreen
+            title="Patient Location Map"
           />
-        ) : (
-          <div style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "#f8f9fa",
-            borderRadius: "12px",
-            border: "2px dashed #dee2e6",
-            color: "#6c757d",
-            fontSize: "16px",
-            fontWeight: "500"
-          }}>
-            📍 Location data will appear here
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Location Modal */}
-      <LocationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        location={location}
-        home={home}
-      />
+      {!location && (
+        <div style={{
+          marginTop: "16px",
+          width: "100%",
+          height: "300px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#f8f9fa",
+          borderRadius: "12px",
+          border: "2px dashed #dee2e6",
+          color: "#6c757d",
+          fontSize: "16px",
+          fontWeight: "500"
+        }}>
+          📍 Location data will appear here
+        </div>
+      )}
+
+
     </div>
   );
 }

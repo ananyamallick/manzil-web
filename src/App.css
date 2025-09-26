@@ -560,6 +560,87 @@ button[type="submit"]:hover::before {
   }
 }
 
+/* Signup page specific adjustments to prevent scrollbar */
+.signup-page .login-card {
+  padding: 30px 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.signup-page .login-header {
+  margin-bottom: 20px;
+}
+
+.signup-page .login-icon {
+  margin-bottom: 8px;
+}
+
+.signup-page .login-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.signup-page .login-title {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.signup-page .login-subtitle {
+  font-size: 13px;
+}
+
+.signup-page .login-form {
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.signup-page .form-group {
+  margin-bottom: 0;
+}
+
+.signup-page .form-label {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.signup-page .form-input {
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.signup-page .login-button {
+  padding: 12px;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.signup-page .login-footer {
+  font-size: 13px;
+}
+
+@media (max-height: 700px) {
+  .signup-page .login-card {
+    padding: 24px 20px;
+  }
+  
+  .signup-page .login-header {
+    margin-bottom: 16px;
+  }
+  
+  .signup-page .login-form {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .signup-page .form-input {
+    padding: 8px 10px;
+  }
+  
+  .signup-page .login-button {
+    padding: 10px;
+  }
+}
+
 /* Location Component Styles */
 .location-container {
   width: 100%;

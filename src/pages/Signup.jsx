@@ -54,95 +54,70 @@ function Signup() {
 
   // 🔹 UI
   return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      background: "linear-gradient(135deg, #e0f7fa, #f1f8e9)",
-      fontFamily: "Poppins, sans-serif"
-    }}>
-      <div style={{
-        background: "#fff",
-        padding: "40px",
-        borderRadius: "16px",
-        boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
-        width: "100%",
-        maxWidth: "400px",
-        textAlign: "center"
-      }}>
-        <img 
-          src="https://cdn-icons-png.flaticon.com/512/2966/2966486.png" 
-          alt="Medical Icon" 
-          style={{ width: "60px", marginBottom: "15px" }}
-        />
-        <h2 style={{ color: "#0077b6", marginBottom: "10px" }}>Create Account</h2>
-        <p style={{ color: "#555", marginBottom: "20px" }}>Join the Patient Care Portal</p>
+    <div className="login-container animate-fadeInUp signup-page">
+      <div className="login-card">
+        <div className="login-header">
+          <div className="login-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="#d4af37"/>
+            </svg>
+          </div>
+          <h2 className="login-title">Create Account</h2>
+          <p className="login-subtitle">Join the Patient Care Portal</p>
+        </div>
 
-        <form onSubmit={handleSignup} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          <input
-            type="email"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-              outline: "none"
-            }}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-              outline: "none"
-            }}
-          />
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
-            style={{
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid #ccc",
-              outline: "none"
-            }}
-          >
-            <option value="">Select Role</option>
-            <option value="family">Family Member</option>
-            <option value="caregiver">Caregiver</option>
-          </select>
+        <form onSubmit={handleSignup} className="login-form">
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="form-input"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="form-input"
+            />
+          </div>
 
-          {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
-          <button
-            type="submit"
-            style={{
-              padding: "12px",
-              borderRadius: "8px",
-              border: "none",
-              background: "#0077b6",
-              color: "#fff",
-              fontWeight: "bold",
-              cursor: "pointer"
-            }}
-          >
+          <div className="form-group">
+            <label htmlFor="role" className="form-label">Role</label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+              className="form-input"
+            >
+              <option value="">Select Role</option>
+              <option value="family">Family Member</option>
+              <option value="caregiver">Caregiver</option>
+            </select>
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+          
+          <button type="submit" className="login-button">
             Sign Up
           </button>
         </form>
 
-        <p style={{ marginTop: "15px", fontSize: "14px" }}>
-          Already have an account?{" "}
-          <Link to="/" style={{ color: "#0077b6", fontWeight: "bold" }}>
-            Login
-          </Link>
-        </p>
+        <div className="login-footer">
+          <p>Already have an account? <Link to="/" className="signup-link">Login</Link></p>
+        </div>
       </div>
     </div>
   );
