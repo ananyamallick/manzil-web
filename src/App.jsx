@@ -18,7 +18,6 @@ function App() {
         <Route path="/patients" element={<Patients />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="*" element={<Login />} />
       </Routes>
     </Router>
   );
