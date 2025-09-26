@@ -17,6 +17,8 @@ export default function PatientLocation() {
   const [home] = useState({ lat: 12.899, lng: 80.189 }); // safe zone center (set to hospital/home)
   const [radius] = useState(500); // meters
   const [location, setLocation] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
 
   const openGoogleMaps = () => {
     if (location) {
@@ -36,9 +38,12 @@ export default function PatientLocation() {
         const newLoc = { lat: latitude, lng: longitude };
         setLocation(newLoc);
 
-        // Check distance (logic kept for future use but no alert displayed)
+        // Check distance and show alert if out of range
         const dist = distanceMeters(latitude, longitude, home.lat, home.lng);
-        // Alert logic removed as requested
+        if (dist > radius) {
+          setAlertMessage(`⚠️ Patient is out of safe zone! Distance: ${dist.toFixed(0)}m (Max: ${radius}m)`);
+          setShowAlert(true);
+        }
       },
       (err) => alert("Error getting location: " + err.message),
       { enableHighAccuracy: true }
@@ -136,6 +141,40 @@ export default function PatientLocation() {
         </div>
       )}
 
+      {/* Out of Range Alert Popup */}
+      {showAlert && (
+        <div style={{
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          background: "#ff6b6b",
+          color: "white",
+          padding: "16px 20px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          zIndex: "1000",
+          maxWidth: "300px",
+          animation: "slideInRight 0.3s ease-out"
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontWeight: "600", fontSize: "14px" }}>{alertMessage}</span>
+            <button 
+              onClick={() => setShowAlert(false)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "white",
+                fontSize: "18px",
+                cursor: "pointer",
+                marginLeft: "12px",
+                padding: "0"
+              }}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Patients from "./pages/Patients";
 import Settings from "./pages/Settings";
+import Logout from "./pages/Logout";
 
 
 
@@ -16,6 +17,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/patients" element={<Patients />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="*" element={<Login />} />
       </Routes>
     </Router>
   );
